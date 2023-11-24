@@ -1,0 +1,11 @@
+pandas
+django
+yfinance
+matplotlib
+numpy
+ta
+TA-Lib
+python-dotenv
+daphne
+django-bootstrap-v5
+mysqlclient

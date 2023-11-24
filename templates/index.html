@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+		<div style="width:1000px">
+			<canvas id="chartOne"></canvas>
+		</div>
+
+		<div style="width:1000px">
+			<canvas id="chartTwo"></canvas>
+		</div>
+
+		<div style="width:1000px">
+			<canvas id="chartThree"></canvas>
+		</div>
+
+<form action="" id="form1">
+	<div class="row">
+	<div class="col-sm-4">
+	<label>Trade Asset:</label>
+	<select name="asset" id="asset">
+	  <option value="btc-usd">BTC-USD</option>
+	  <option value="AAPL">Apple</option>
+	  <option value="TSLA">Tesla</option>
+	  <option value="GOOG">Google</option>
+	  <option value="TATASTEEL.NS">TATA Steel</option>
+	</select><br>
+	<label>Time Period:</label> <input type="floating" name="timeperiod" id="timeperiod" value="14"> <br>
+	<label>Acceleration:</label> <input type="floating" name="acceleration" id="acceleration" value="14"> <br>
+	<label>Maximum:</label> <input type="floating" name="maximum" id="maximum" value="13"> <br>
+  	</div>
+	<div class="col-sm-6"><input type="submit" class="btn btn-primary" value="Submit"/></div>
+	</div>
+</form>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-sm-4" style="background-color:yellow;" id="logs">Logs:<br>Connecting to server.......</div>
+		<div class="col-sm-6" style="background-color:pink;">Signal & It's Reason : <span id="signal"></span></div>
+	</div>
+</div>
+<script src="{% static 'js/index.js' %}"></script>
+<script>
+	var socket = null;
+	document.addEventListener("DOMContentLoaded", function() {
+		var socket = createSocket({
+		timeperiod: 14,
+		maximum:10,
+		acceleration: 14, asset: 'btc-usd'});
+
+		// On Submit
+		document.getElementById("form1").addEventListener("submit", function(e) {
+			e.preventDefault();
+			let target = e.target;
+			console.log(e);
+			if(socket){
+				addLog("Closing Socket");
+				socket.close()
+			}
+			addLog("Creating Socket for " + target.asset.value);
+			socket = createSocket({
+				maximum: target.maximum.value,
+				acceleration: target.acceleration.value,
+				timeperiod: target.timeperiod.value,
+				asset: target.asset.value
+			});
+		});
+
+	});
+</script>
+{% endblock %}

@@ -1,0 +1,8 @@
+[client]
+database = tradeapp
+HOST = 127.0.0.1
+unix_socket = TCP
+port = 3306
+user = root
+password =
+default-character-set = utf8
