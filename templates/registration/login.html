@@ -1,34 +1,36 @@
 {% extends 'auth_base.html' %}
 {% block title %}Login{% endblock %}
-
 {% block content %}
-{% if user.is_authenticated %}
+    {% if user.is_authenticated %}
+        <meta http-equiv="REFRESH" content="2;url=/">
+        <p class="text-capitalize"> Welcome {{ user.username }}</p>
+        <br>
+        User is already authenticated. Redirecting to dashboard.
 
-Welcome {{ user.username }}
+    {% else %}
+        <h2>Log In or <a href="/signup"> Sign Up </a></h2>
 
-{% else %}
+        {% if form.non_field_errors %}
+          <div class="container" style="color:red;">
+              {% for error in form.non_field_errors %}
+                  <div class="row"> {{error}}</div>
+             {% endfor %}
+          </div>
+        {% endif %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group col-sm-4">
+            <label for="id_username">Username</label>
+            <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control" id="exampleInputEmail1"  placeholder="Enter Username">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="id_password">Password</label>
+            <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
 
-
-<h2>Log In or <a href="/signup"> Sign Up </a></h2>
-
-<form method="post">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="id_username">Username</label>
-    <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control" id="exampleInputEmail1"  placeholder="Enter Username">
-  </div>
-  <div class="form-group">
-    <label for="id_password">Password</label>
-    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
-  </div>
-  <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-
-{% endif %}
+    {% endif %}
 
 {% endblock %}
 

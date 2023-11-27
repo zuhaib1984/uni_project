@@ -78,7 +78,7 @@ class GetSignalConsumer(AsyncJsonWebsocketConsumer):
                 df,
             )
             df = simple_moving_average(df, acceleration=acceleration, maximum=maximum)
-            df_json = df.tail(80).to_json()
+            df_json = df.tail(60).to_json()
             signal = get_signal(df)
 
             await self.send(json.dumps({"data": df_json, "signal": signal}))

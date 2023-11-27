@@ -12,15 +12,17 @@
     <script src="{% static 'js/chartjs-chart-financial.min.js' %}"></script>
 </head>
 <body>
-<div class="container">
+<div class="container-fluid">
+
+<p class="text-capitalize"> Welcome {{ user.username }}</p>
   <ul class="nav bg-info">
     <li class="nav-item">
       <a class="nav-link link-light" href="/">HOME</a>
     </li>
     <li class="nav-item">
         <form action="{% url 'logout'%}">
-      <button type="submit"  >Logout</button>
-            </form>
+                <button type="submit">Logout</button>
+        </form>
     </li>
   </ul>
 

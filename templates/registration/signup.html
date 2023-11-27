@@ -2,37 +2,52 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-{% if user.is_authenticated %}
-
-Welcome {{ user.username }}
-
-{% else %}
-
-
-<h2>Sign Up</h2>
-
-<form method="post">
-  {% csrf_token %}
-  <div class="form-group">
-    <label for="id_username">Username</label>
-    <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control" id="exampleInputEmail1"  placeholder="Enter Username">
-  </div>
-  <div class="form-group">
-    <label for="id_password">Password</label>
-    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
-  </div>
-    <div class="form-group">
-    <label for="id_password">Confirm Password</label>
-    <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
-  </div>
-  <div class="form-group form-check">
-    <input type="checkbox" class="form-check-input" id="exampleCheck1">
-  </div>
-  <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
-
-{% endif %}
+    {% if user.is_authenticated %}
+        <meta http-equiv="REFRESH" content="5;url={{ user.get_profile.store_url }}">
+        User is already authenticated. Redirecting to dashboard.
+    {% endif %}
+    {% if user_created %}
+        <h1> User created!!! <a href="{% url 'login'%}">Click here to login again.</a> </h1>
+    {% else %}
+        <div class="container">
+          <h2>Sign Up</h2>
+        </div>
+        {% if errors %}
+          <div class="container" style="color:red;">
+          {% for error in errors %}
+                  <div class="row"> {{error}}</div>
+             {% endfor %}
+          </div>
+        {% endif %}
+        <form method="post" action="/signup">
+          {% csrf_token %}
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label for="id_username">Username</label>
+              <input type="text" name="username" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_username" class="form-control" placeholder="Username">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label for="id_username">Email</label>
+              <input type="text" name="email" autofocus="" autocapitalize="none" autocomplete="username" maxlength="150" required="" id="id_email" class="form-control"  placeholder="Email">
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-4">
+              <label for="id_password">Password</label>
+              <input type="password" name="password" autocomplete="current-password" required="" id="id_password" class="form-control" placeholder="Password">
+            </div>
+            <div class="form-group col-sm-4">
+              <label for="id_password">Confirm Password</label>
+              <input type="password" name="confirm_password" autocomplete="current-password" required="" id="id_confirm_password" class="form-control" placeholder="Confirm Password">
+            </div>
+          </div>
+          <div class="row">
+            <button type="submit" class="btn btn-primary col-sm-2">Submit</button>
+          </div>
+        </form>
+    {% endif %}
 
 {% endblock %}
 

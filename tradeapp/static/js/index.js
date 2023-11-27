@@ -1,20 +1,13 @@
-function create_chart(canvasid, type, width, height, charttype){
+function create_chart(canvasid, type, width, height, options){
     var ctx = document.getElementById(canvasid).getContext('2d');
     ctx.canvas.width = width;
     ctx.canvas.height = height;
+    options.elements = { point: { radius: 0 } }
+    options.animation = { duration: 0.1 }
 
     return new Chart(ctx, {
-        type: charttype,
-        options: {
-        elements: {
-                point: {
-                    radius: 0
-                }
-            },
-        animation: {
-            duration: 0.1
-            }
-        },
+        type: type,
+        options: options,
         data: []
     });
 }
@@ -49,12 +42,12 @@ function convert_data(data){
         });
 
         d.rsi.push({
-            x: Number(key),
+            x: new Date(Number(key)).toJSON(),
             y: data['RSI'][key]
         })
 
         d.sma.push({
-            x: Number(key),
+            x: new Date(Number(key)).toJSON(),
             y: data['SMA'][key]
         })
     });
@@ -62,22 +55,43 @@ function convert_data(data){
     return d;
 }
 
-var line_options =  {
-    elements: {
-        point:{
-            radius: 10
-        }
-    }
-}
 
-     
-var chartOne = create_chart('chartOne', 'candlestick', 1000, 250, 'candlestick');
+// Chart One
+var charOneOptions = {}
+var chartOne = create_chart('chartOne', 'candlestick', 1000, 250, charOneOptions);
 
 // Chart Two
-var chartTwo = create_chart('chartTwo', 'line', 1000, 250, 'line');
+var charTwoOptions = {
+        type: 'line',
+        label: 'RSI',
+        borderColor: "#bae755",
+        borderDash: [5, 5],
+        backgroundColor: "#e755ba",
+        pointBackgroundColor: "#55bae7",
+        pointBorderColor: "#55bae7",
+        pointHoverBackgroundColor: "#55bae7",
+        pointHoverBorderColor: "#55bae7",
+          scales: {
+         xAxes: [{
+            ticks: {
+                autoSkip: true,
+                maxTicksLimit: 20,
+                maxRotation: 0,
+            },
+            type: 'time',
+            time: {
+               unit: 'hour',
+               displayFormats: {
+                  hour: 'HH:mm'
+               }
+            }
+         }]
+         },
+    }
+var chartTwo = create_chart('chartTwo', 'line', 1000, 250, charTwoOptions);
 
 // Chart Three
-var chartThree = create_chart('chartThree', 'line', 1000, 250, 'line');
+var chartThree = create_chart('chartThree', 'line', 1000, 250, {});
 
 function addLog(log){
     console.log('addinglog', log)
@@ -90,11 +104,10 @@ function update(data) {
     // Chart One
     chartOne.config.data.datasets = [{
         type: 'candlestick',
-        label: 'Line',
+        label: 'Candel Chart',
         data: data.cs
     }, {
         type: 'line',
-        options: line_options,
         label: 'BB - Upper Band',
         data: data.bb.ub
     }, {
@@ -111,32 +124,14 @@ function update(data) {
     }]
 
     // Chart Two
-    chartTwo.config.data.datasets = [{
-        type: 'candlestick',
-        label: 'Line',
-        data: []
-    }, {
-        type: 'line',
-        options: line_options,
-        label: 'RSI',
-        borderColor: "#bae755",
-        borderDash: [5, 5],
-        backgroundColor: "#e755ba",
-        pointBackgroundColor: "#55bae7",
-        pointBorderColor: "#55bae7",
-        pointHoverBackgroundColor: "#55bae7",
-        pointHoverBorderColor: "#55bae7",
-        data: data.rsi
-    }]
+    chartTwo.config.data.datasets = [{type: 'line',
+        label: 'RSI', data: data.rsi}];
+    console.log('rsi', data.rsi);
 
     // Chart Three
     chartThree.config.data.datasets = [{
-        type: 'candlestick',
-        label: 'Line',
-        data: []
-    },{
         type: 'line',
-        label: 'SMA',
+        label: 'SAR',
         borderColor: "#bae755",
         borderDash: [5, 5],
         backgroundColor: "#e755ba",
